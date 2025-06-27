@@ -41,6 +41,12 @@
             <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Micrometer Graphite registry for metrics -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-graphite</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -54,7 +60,7 @@
                     <target>17</target>
                 </configuration>
             </plugin>
-        
+
             <!-- Maven Compiler Plugin -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -64,7 +70,7 @@
                     <target>17</target>
                 </configuration>
             </plugin>
-        
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
