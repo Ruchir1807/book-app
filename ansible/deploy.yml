@@ -1,0 +1,8 @@
+- name: Deploy Book App
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Print deployment message
+      debug:
+        msg: "Deploying book-app-1.0.0.jar successfully!"
+
