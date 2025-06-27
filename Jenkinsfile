@@ -22,7 +22,6 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Your deployment steps here
                 sh 'ansible-playbook -i ansible/inventory ansible/deploy.yml'
             }
         }
