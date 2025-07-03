@@ -1,6 +1,6 @@
 ---
 - name: Full CI/CD Deployment for Book App
-  hosts: app_server
+  hosts: ruchir
   become: true
 
   tasks:
