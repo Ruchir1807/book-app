@@ -1,8 +1,66 @@
-- name: Deploy Book App
-  hosts: localhost
-  connection: local
-  tasks:
-    - name: Print deployment message
-      debug:
-        msg: "Deploying book-app-1.0.0.jar successfully!"
+---
+- name: Full CI/CD Deployment for Book App
+  hosts: app_server
+  become: true
 
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - git
+          - openjdk-17-jdk
+          - maven
+          - docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Clone latest book-app repository
+      git:
+        repo: https://github.com/Ruchir1807/book-app.git
+        dest: /opt/book-app
+        version: main
+
+    - name: Build the JAR file using Maven
+      shell: mvn clean package
+      args:
+        chdir: /opt/book-app
+
+    - name: Build the Docker image
+      shell: docker build -t book-app:1.0.0 .
+      args:
+        chdir: /opt/book-app
+
+    - name: Stop and remove existing container (if any)
+      shell: |
+        docker stop book-app || true
+        docker rm book-app || true
+
+    - name: Run the new book-app container
+      shell: docker run -d --name book-app -p 8081:8081 book-app:1.0.0
+
+    - name: Start Graphite container
+      docker_container:
+        name: graphite
+        image: graphiteapp/graphite-statsd
+        ports:
+          - "80:80"
+          - "2003-2004:2003-2004"
+          - "8125:8125/udp"
+          - "8126:8126"
+        state: started
+        restart_policy: always
+
+    - name: Start Grafana container
+      docker_container:
+        name: grafana
+        image: grafana/grafana
+        ports:
+          - "3000:3000"
+        state: started
+        restart_policy: always
