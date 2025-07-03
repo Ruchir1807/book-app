@@ -1,8 +1,7 @@
 ---
 - name: Full CI/CD Deployment for Book App
   hosts: localhost
-  become: true
-
+  connection: local
   tasks:
     - name: Install required packages
       apt:
